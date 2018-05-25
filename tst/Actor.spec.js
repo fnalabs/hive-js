@@ -13,10 +13,10 @@ import { parse } from '../src/util'
 import TestSchema from './schemas/TestSchema.json'
 
 // constants
-const payload = {
-  data: { view: 1 },
+const data = {
+  type: 'Test',
+  payload: { view: 1 },
   meta: {
-    model: 'Test',
     schema: 'https://hiveframework.io/api/v1/models/Test'
   }
 }
@@ -68,17 +68,17 @@ describe('class Actor', () => {
   })
 
   describe('#perform', () => {
-    it('should create, validate, and return the new model', async () => {
-      const { model } = await testActor.perform(payload)
+    it('should validate and return the model created from data', async () => {
+      const { model } = await testActor.perform(undefined, data)
 
       expect(model).to.be.an.instanceof(Model)
       expect(model).to.deep.equal({ view: 1 })
       expect(await Model.validate(model)).to.be.true()
     })
 
-    it('should assign, validate, and return an existing model', async () => {
-      const testModel = await new Model({ meta: { model: 'Test' } }, testSchema)
-      const { model } = await testActor.perform(payload, testModel)
+    it('should validate and return an existing model', async () => {
+      const testModel = await new Model({ type: 'Test' }, testSchema)
+      const { model } = await testActor.perform(testModel, data)
 
       expect(model).to.be.an.instanceof(Model)
       expect(model).to.deep.equal({ view: 1 })
@@ -86,17 +86,17 @@ describe('class Actor', () => {
     })
 
     it('should throw an error if bad data is passed', async () => {
-      const testModel1 = await new Model({ meta: { model: 'Test' } }, testSchema)
+      const testModel1 = await new Model({ type: 'Test' }, testSchema)
 
       try {
-        await testActor.perform({ meta: { model: 'Test' } }, testModel1)
+        await testActor.perform(testModel1, { type: 'Test' })
       } catch (e) {
         expect(e.message).to.equal('#required: value does not have all required properties')
       }
 
-      const testModel2 = await new Model(payload, testSchema)
+      const testModel2 = await new Model(data, testSchema)
       try {
-        await testActor.perform({ data: { view: 'something' }, meta: { model: 'Test' } }, testModel2)
+        await testActor.perform(testModel2, { type: 'Test', payload: { view: 'something' } })
       } catch (e) {
         expect(e.message).to.deep.equal('#type: value is not a(n) number')
       }
@@ -104,30 +104,37 @@ describe('class Actor', () => {
   })
 
   describe('#replay', () => {
-    it('should replay a single payload successfully', async () => {
-      const model = await testActor.replay(payload)
+    it('should replay a single data payload successfully', async () => {
+      const { model } = await testActor.replay(data)
       expect(model).to.deep.equal({ view: 1 })
     })
 
     it('should replay a sequence of data successfully', async () => {
-      const model = await testActor.replay([payload, payload, payload])
+      const { model } = await testActor.replay([data, data, data])
       expect(model).to.deep.equal({ view: 1 })
     })
   })
 
   describe('#assign', () => {
     it('should assign data to a model', async () => {
-      let model = await new Model({ test: 2 }, testSchema)
-      model = testActor.assign(model, payload.data)
+      let model = await new Model({ type: 'Test' }, testSchema)
+      model = testActor.assign(model, data.payload)
 
       expect(model).to.deep.equal({ view: 1 })
     })
 
     it('should assign complex data data to a model', async () => {
-      let model = await new Model({ view: 2 }, testSchema)
-      model = testActor.assign(model, { ...payload.data, another: { nested: 'object' } })
+      let model = await new Model({ type: 'Test', view: 2 }, testSchema)
+      model = testActor.assign(model, { ...data.payload, another: { nested: 'object' } })
 
       expect(model).to.deep.equal({ view: 1, another: { nested: 'object' } })
+    })
+
+    it('should assign no data successfully', async () => {
+      let model = await new Model({ type: 'Test' }, testSchema)
+      model = testActor.assign(model)
+
+      expect(model).to.deep.equal({})
     })
   })
 

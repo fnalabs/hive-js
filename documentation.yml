@@ -8,9 +8,9 @@ toc:
       [![Dependency Status][depstat-image]][depstat-url]
       [![JavaScript Style Guide][style-image]][style-url]
 
-      A reactive, "serverless" JavaScript framework.
+      A reactive, universal JavaScript library for the Hive<sup>io</sup> framework.
 
-      This is where the business logic exists in your codebase. The [Actor Model](https://en.wikipedia.org/wiki/Actor_model) is used as the basic building block to implement standardized, reactive microservices that employ the Actors. The intent is to clearly define a separation between infrastructure as code and business logic allowing them both to adapt and scale independently. From simple REST services to CQRS/ES microservices, this framework is flexible enough to enable the Actors to adopt new roles on the fly.
+      This is where the business logic exists in your codebase. The [Actor Model](https://en.wikipedia.org/wiki/Actor_model) is used as the basic building block to implement standardized, reactive microservices that employ the Actors. The intent is to clearly define a separation between infrastructure as code and business logic allowing them both to adapt and scale independently. From simple REST services to CQRS/ES microservices, this library is flexible enough to enable the Actors to adopt new roles on the fly.
 
       *NOTE:* More examples can be found in the 2 example npm packages:
         - [hive-io-rest-example](https://www.npmjs.com/package/hive-io-rest-example)
@@ -39,10 +39,53 @@ toc:
       ```sh
       $ npm install hive-io
       ```
+  - name: Data interface
+    description: |
+      The network data interface structure follows the Flux Standard Action specification. This means you can expect at least one of the following keys, usually only `type`.
+      ```javascript
+      {
+        type: String, // <associated_JSON_Schema_title>
+        [payload]: {
+          ...modelData,
+        },
+        [meta]: {
+          [headers]: { ...req.headers }, // All request headers defined
+          [method]: req.method, // HTTP verb (GET, POST, PATCH, PUT, DELETE, etc.)
+          [url]: parse(req.url, true), // Node.js Legacy URL Object
+          [urlParams]: actor.parse(req.url), // Hive^io URL params defined in Actor constructor
+          [version]: Number, // Optional verion to help manage concurrency
+        },
+        [errors]: [<list_of_Errors>],
+      }
+      ```
   - name: Schema
     description: |
       The `Schema` [class](https://fnalabs.github.io/schema-json-js/) exposed in this framework exists in a [different](https://www.npmjs.com/package/schema-json-js) [project](https://github.com/fnalabs/schema-json-js). It is a JSON Schema validator class that supports the `draft-04` and `draft-06` versions of the specification. It is used to enrich the `Model` with structured validation that is very flexible to evolve as your business needs do.
   - Model
   - Actor
   - MessageActor
+  - System
   - parse
+  - name: Changelog
+    description: |
+      #### v2.0.0-beta.2
+      - replaced JSON API specification with Flux Standard Action specification
+      - added System class for internal Actor message bus
+        - this required a breaking change in the argument order on the `Actor.perform` method
+      - added browser tests for most recent Chrome and Firefox
+
+      #### v2.0.0-beta.1
+      - added documentation
+
+      #### v2.0.0-beta
+      - updated name and organization
+      - renamed Handler to Actor and added Aggregate functionality to it
+      - removed Schema for more robust JSON Schema solution (refactored into `schema-json-js` dependency)
+      - removed Message|Command|Event since these can be represented as Model|Schema and performed with Actors
+      - adopted JSON API and JSON Schema specifications
+
+      #### v1.0.0
+      - initial release (of `js-cqrs-es`)
+
+      #### pre-v1.0.0
+      ![nothing to see here](https://www.reactiongifs.us/wp-content/uploads/2016/04/nothing_to_see_here_naked_gun.gif)
