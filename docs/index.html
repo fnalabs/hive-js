@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset='utf-8' />
-  <title>hive-io 2.0.0-rc | Documentation</title>
+  <title>hive-io 2.0.0-rc.1 | Documentation</title>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <link href='assets/bass.css' type='text/css' rel='stylesheet' />
   <link href='assets/style.css' type='text/css' rel='stylesheet' />
@@ -14,7 +14,7 @@
       <div id='split-left' class='overflow-auto fs0 height-viewport-100'>
         <div class='py1 px2'>
           <h3 class='mb0 no-anchor'>hive-io</h3>
-          <div class='mb1'><code>2.0.0-rc</code></div>
+          <div class='mb1'><code>2.0.0-rc.1</code></div>
           <input
             placeholder='Filter'
             id='filter-input'
@@ -1940,7 +1940,13 @@
   </h2>
 
   
-    <h4>v2.0.0-rc</h4>
+    <h4>v2.0.0-rc.1</h4>
+<ul>
+<li>modified Stream Processor algorithm for pessimistic concurrency</li>
+<li>modified Stream Processor to publish to Log if in <code>stream-processor</code> mode and Actors return values from their <code>perform</code> method</li>
+<li>updated routes in <code>hive-io-domain-example</code></li>
+</ul>
+<h4>v2.0.0-rc</h4>
 <ul>
 <li>level set version for all framework components</li>
 <li>fix error handling on components</li>
