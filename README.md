@@ -23,7 +23,7 @@ This is where the business logic exists in your codebase. The [Actor Model](http
 ## Installing
 Install using `npm`:
 ```sh
-$ npm install hive-io
+$ npm install --save hive-io
 ```
 
 ## [API](https://hiveframework.io/api/)
@@ -42,7 +42,7 @@ We are currently drafting our contributing guide!
 
 *Browser compatibility testing provided by:*
 
-<a href="https://browserstack.com"><img height="48" src="https://fnalabs.github.io/fnalabs-assets/assets/Browserstack-logo.svg" alt="BrowserStack logo"></a>
+<a href="https://browserstack.com"><img height="48" src="https://fnalabs.github.io/fnalabs-assets/assets/Browserstack-logo.svg" alt="BrowserStack"></a>
 
 ## Changelog
 #### v2.0.0-rc.2
